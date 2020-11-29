@@ -63,6 +63,7 @@ def sample_graph():
 
     if not os.path.exists(py.join(output_dir, 'generator.pb')):
         # model
+        print("ARGS.MODEL", args.model)
         Genc, Gdec, _ = module.get_model(args.model, n_atts, weight_decay=args.weight_decay)
 
         # placeholders & inputs

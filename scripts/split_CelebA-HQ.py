@@ -1,3 +1,4 @@
+import math
 import os
 import random
 
@@ -19,9 +20,15 @@ with open(label_file, 'r') as f:
 random.seed(100)
 random.shuffle(lines)
 
-lines_train = lines[:26500]
-lines_val = lines[26500:27000]
-lines_test = lines[27000:]
+train_ratio = 0.95
+val_ratio = 0.025
+test_ratio = 0.025
+
+dataset_len = len(lines)
+
+lines_train = lines[:math.ceil(train_ratio*dataset_len)]
+lines_val = lines[math.ceil(train_ratio*dataset_len):math.ceil((train_ratio + val_ratio)*dataset_len)]
+lines_test = lines[math.ceil((train_ratio + val_ratio)*dataset_len):]
 
 with open(os.path.join(save_dir, 'train_label.txt'), 'w') as f:
     f.writelines(lines_train)

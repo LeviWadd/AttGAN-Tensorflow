@@ -4,7 +4,7 @@ import tensorflow as tf
 import tflib as tl
 
 
-ATT_ID = {'5_o_Clock_Shadow': 0, 'Arched_Eyebrows': 1, 'Attractive': 2,
+"""ATT_ID = {'5_o_Clock_Shadow': 0, 'Arched_Eyebrows': 1, 'Attractive': 2,
           'Bags_Under_Eyes': 3, 'Bald': 4, 'Bangs': 5, 'Big_Lips': 6,
           'Big_Nose': 7, 'Black_Hair': 8, 'Blond_Hair': 9, 'Blurry': 10,
           'Brown_Hair': 11, 'Bushy_Eyebrows': 12, 'Chubby': 13,
@@ -16,7 +16,8 @@ ATT_ID = {'5_o_Clock_Shadow': 0, 'Arched_Eyebrows': 1, 'Attractive': 2,
           'Rosy_Cheeks': 29, 'Sideburns': 30, 'Smiling': 31,
           'Straight_Hair': 32, 'Wavy_Hair': 33, 'Wearing_Earrings': 34,
           'Wearing_Hat': 35, 'Wearing_Lipstick': 36,
-          'Wearing_Necklace': 37, 'Wearing_Necktie': 38, 'Young': 39}
+          'Wearing_Necklace': 37, 'Wearing_Necktie': 38, 'Young': 39}"""
+ATT_ID = {"retro": 0, "vert_stripes": 1}
 ID_ATT = {v: k for k, v in ATT_ID.items()}
 
 
@@ -32,7 +33,7 @@ def make_celeba_dataset(img_dir,
                         repeat=1):
     img_names = np.genfromtxt(label_path, dtype=str, usecols=0)
     img_paths = np.array([py.join(img_dir, img_name) for img_name in img_names])
-    labels = np.genfromtxt(label_path, dtype=int, usecols=range(1, 41))
+    labels = np.genfromtxt(label_path, dtype=int, usecols=range(1, len(att_names) + 1)) # Changed from range (1, 41)
     labels = labels[:, np.array([ATT_ID[att_name] for att_name in att_names])]
 
     if shuffle:
@@ -42,6 +43,7 @@ def make_celeba_dataset(img_dir,
 
     if training:
         def map_fn_(img, label):
+            print(tf.shape(img))
             img = tf.image.resize(img, [load_size, load_size])
             # img = tl.random_rotate(img, 5)
             img = tf.image.random_flip_left_right(img)
@@ -50,6 +52,8 @@ def make_celeba_dataset(img_dir,
             # img = tl.random_grayscale(img, p=0.3)
             img = tf.clip_by_value(img, 0, 255) / 127.5 - 1
             label = (label + 1) // 2
+            #x = tf.image.decode_jpeg(img)
+            print(img)
             return img, label
     else:
         def map_fn_(img, label):
@@ -58,7 +62,7 @@ def make_celeba_dataset(img_dir,
             img = tf.clip_by_value(img, 0, 255) / 127.5 - 1
             label = (label + 1) // 2
             return img, label
-
+    print("HERE!!!")
     dataset = tl.disk_image_batch_dataset(img_paths,
                                           batch_size,
                                           labels=labels,
@@ -66,6 +70,7 @@ def make_celeba_dataset(img_dir,
                                           map_fn=map_fn_,
                                           shuffle=shuffle,
                                           repeat=repeat)
+    print("AFTER")
 
     if drop_remainder:
         len_dataset = len(img_paths) // batch_size

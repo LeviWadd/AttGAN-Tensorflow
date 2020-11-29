@@ -1,0 +1,5 @@
+python train.py --img_dir ./data/CelebAMask-HQ/CelebA-HQ-img --train_label_path ./data/CelebAMask-HQ/train_label.txt --val_label_path ./data/CelebAMask-HQ/val_label.txt --load_size 128 --crop_size 128 --n_epochs 200 --epoch_start_decay 100 --model model_128 --experiment_name AttGAN_128_CelebA-HQ
+
+python test.py --img_dir ./data/CelebAMask-HQ/CelebA-HQ-img --test_label_path ./data/CelebAMask-HQ/test_label.txt --experiment_name AttGAN_128_CelebA-HQ
+
+python test_slide.py --test_att_name retro --test_int_min -1 --test_int_max 1 --test_int_step 0.2 --experiment_name AttGAN_128_CelebA-HQ

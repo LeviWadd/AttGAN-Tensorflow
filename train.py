@@ -16,8 +16,9 @@ import module
 # =                                   param                                    =
 # ==============================================================================
 
-default_att_names = ['Bald', 'Bangs', 'Black_Hair', 'Blond_Hair', 'Brown_Hair', 'Bushy_Eyebrows', 'Eyeglasses',
-                     'Male', 'Mouth_Slightly_Open', 'Mustache', 'No_Beard', 'Pale_Skin', 'Young']
+#default_att_names = ['Bald', 'Bangs', 'Black_Hair', 'Blond_Hair', 'Brown_Hair', 'Bushy_Eyebrows', 'Eyeglasses',
+#                     'Male', 'Mouth_Slightly_Open', 'Mustache', 'No_Beard', 'Pale_Skin', 'Young']
+default_att_names = ["retro", "vert_stripes"]
 py.arg('--att_names', choices=data.ATT_ID.keys(), nargs='+', default=default_att_names)
 
 py.arg('--img_dir', default='./data/img_celeba/aligned/align_size(572,572)_move(0.250,0.000)_face_factor(0.450)_jpg/data')
@@ -77,6 +78,8 @@ val_dataset, len_val_dataset = data.make_celeba_dataset(args.img_dir, args.val_l
                                                         training=False, shuffle=True, repeat=None)
 train_iter = train_dataset.make_one_shot_iterator()
 val_iter = val_dataset.make_one_shot_iterator()
+
+train_iter.get_next()
 
 # model
 Genc, Gdec, D = module.get_model(args.model, n_atts, weight_decay=args.weight_decay)
